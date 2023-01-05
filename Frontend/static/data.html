@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" href="./css/data.css">
+    <script src="/js/data.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    <div id="title"></div>
+    <div class="container">
+        <table>
+            <thead id="dataHead">
+            <tr>
+            </tr>
+            </thead>
+            <tbody id="dataBody">
+            </tbody>
+        </table>
+        <div id="piechart">
+            <form id="createPieChart" style="padding-top: 20px; display: flex;">
+                <select class="form-select" id="piechartform" aria-label="Default select example">
+                    <option selected value="">자리별 숫자 % 그래프</option>
+                    <option value="No1" name="No1">1번째 자리</option>
+                    <option value="No2">2번째 자리</option>
+                    <option value="No3">3번째 자리</option>
+                    <option value="No4">4번째 자리</option>
+                    <option value="No5">5번째 자리</option>
+                    <option value="No6">6번째 자리</option>
+                    <option value="bnsNum">보너스 자리</option>
+                </select>
+                <button type="button" id="btn_create" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+    <div class="buttondiv">
+        <button type="button" id="downloadmostcommon" class="btn btn-warning">전체 차트 다운로드</button>
+        <button type="button" id="downloadAllRecord" class="btn btn-warning">역대 로또 당첨 번호 다운로드</button>
+    </div>
+</body>
+</html>

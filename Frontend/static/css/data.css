@@ -1,0 +1,89 @@
+@import url('https://fonts.googleapis.com/css?family=Ubuntu');
+
+html, body {
+    margin: 0px;
+    padding: 0px;
+    background-color:#68BBE3;
+}
+
+#title {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Ubuntu', sans-serif;
+    font-size: 30px;
+    font-weight: bold;
+    border-radius: 25px;
+    background: #F6C324;
+    width: 750px;
+    height: 90px;
+    line-height: 90px;
+    text-align: center;
+    color:black;
+    box-shadow: 5px 5px 5px 5px gray;
+    text-align: center;
+    letter-spacing: 5px;
+    position: absolute; 
+    left: 0; 
+    right: 0; 
+    margin-left: auto; 
+    margin-right: auto; 
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    min-height: 100vh;
+}
+
+table {
+    border: 1px #a39485 solid;
+    font-size: .9em;
+    box-shadow: 0 2px 5px rgba(0,0,0,.25);
+    width: 50vw;
+    border-collapse: collapse;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+th {
+    text-align: center;
+}
+
+thead {
+    font-weight: bold;
+    color: #fff;
+    background: #73685d;
+}
+
+td, th {
+    padding: 1em .5em;
+    vertical-align: middle;
+}
+
+td {
+    border-bottom: 1px solid rgba(0,0,0,.1);
+    background: #fff;
+}
+
+#piechart {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    flex-direction: column;
+    top: -50px;
+    position: relative
+}
+
+.buttondiv {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: absolute;
+    top: 85%;
+    left: 15%;
+}
