@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
 from collections import Counter
-import os, json, sys, random
+import os, json, sys, random, ast
 
 
 No1 = [] 
@@ -134,31 +134,77 @@ def checkifrepeated():
 #https://www.machinelearningplus.com/pandas/pandas-duplicated/
 #https://stackoverflow.com/questions/70506590/i-want-to-check-if-there-are-any-identical-rows-in-a-matrix
 #https://www.google.com/search?q=pandas+numpy+check+if+there+is+repeated+row+and+return+value&newwindow=1&sxsrf=ALiCzsaS-gqhtNmV2FFlP38se4lWiKbDTQ%3A1672939431480&ei=pwe3Y9n5HJiW-Aa9vqWQDQ&oq=pandas+numpy+check+if+there+is+repeated+row+and+return&gs_lcp=Cgxnd3Mtd2l6LXNlcnAQAxgAMgUIIRCgATIFCCEQoAEyBQghEKABOgoIABBHENYEELADOgQIIRAVOgcIIRCgARAKSgQIQRgASgQIRhgAULDGA1i00gNg_dsDaAJwAXgAgAH1AYgB4A2SAQUwLjkuMpgBAKABAcgBCMABAQ&sclient=gws-wiz-serp
-def lottopredict(amount):
+def lottopredict(amount, randomDigitOption, digitcounts):
     returnLottoArray = []
     lottoNumPredict = []
     sampleSize = 7
     lottoPlaceCount = 0
 
+    script_dir = os.path.dirname(__file__)
+    file_path = os.path.join(script_dir, "../DataCollection/frequencyData.json")
+    jsonfile = open(file_path, 'r')
+    data = json.load(jsonfile)
+    
+    if int(randomDigitOption) == 0:
+        for i in range(int(amount)):
 
-    for i in range(int(amount)):
+            while lottoPlaceCount < sampleSize:
+                r = random.randint(0,45)
+                if r not in lottoNumPredict:
+                    lottoPlaceCount += 1
+                    lottoNumPredict.append(r)
 
-        while lottoPlaceCount < sampleSize:
-            r = random.randint(0,45)
-            if r not in lottoNumPredict:
-                lottoPlaceCount += 1
-                lottoNumPredict.append(r)
+            returnLottoArray.append(lottoNumPredict)
+            lottoNumPredict = []
+            lottoPlaceCount = 0
 
-        returnLottoArray.append(lottoNumPredict)
-        lottoNumPredict = []
-        lottoPlaceCount = 0
+    elif int(randomDigitOption) == 1:
+        digitcounts = ast.literal_eval(digitcounts)
+        NumContainer = []
+        tempNumContainer = []
 
+        for nums in range(len(digitcounts)):
+            for digit in range(int(digitcounts[nums])):
+                if nums == 0:
+                    tempNumContainer.append(data["freqeuncy"]["Num1"][digit][0])
+                elif nums == 1:
+                    tempNumContainer.append(data["freqeuncy"]["Num2"][digit][0])
+                elif nums == 2:
+                    tempNumContainer.append(data["freqeuncy"]["Num3"][digit][0])
+                elif nums == 3:
+                    tempNumContainer.append(data["freqeuncy"]["Num4"][digit][0])
+                elif nums == 4:
+                    tempNumContainer.append(data["freqeuncy"]["Num5"][digit][0])
+                elif nums == 5:
+                    tempNumContainer.append(data["freqeuncy"]["Num6"][digit][0])
+                elif nums == 6:
+                    tempNumContainer.append(data["freqeuncy"]["bnsNum"][digit][0])
+            NumContainer.append(tempNumContainer)
+            tempNumContainer = []
+        
+        j = 0
+        #최소 최고 반복 숫자 조건 7, 6부터는 오류가 뜸
+        for i in range(int(amount)):
+            while lottoPlaceCount < sampleSize:
+                tempIndex = random.randint(0, len(NumContainer[j])-1)
+                r = int(NumContainer[j][tempIndex])
+                if r not in lottoNumPredict:
+                    lottoPlaceCount += 1
+                    lottoNumPredict.append(r)
+
+            j += 1
+
+            returnLottoArray.append(lottoNumPredict)
+            lottoNumPredict = []
+            lottoPlaceCount = 0
+
+    #결과값
     returnLotto = {
         "lottoPredict" : returnLottoArray,
         "amount" : amount
     }
-
     print(returnLotto)
+
 
 
 
@@ -174,4 +220,4 @@ if __name__ == '__main__':
     elif sys.argv[1] == "createPieChart":
         createPieChart(sys.argv[2])
     elif sys.argv[1] == "lottopredict":
-        lottopredict(sys.argv[2])
+        lottopredict(sys.argv[2], sys.argv[3], sys.argv[4])
