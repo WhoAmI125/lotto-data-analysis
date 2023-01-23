@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
 from collections import Counter
-import os, json, sys, random, ast
+import os, json, sys, random, ast, time
 
 
 No1 = [] 
@@ -15,6 +15,7 @@ No6 = []
 bonusNo = []
 count = 0
 
+#
 def createLottoResultAllTime():
     resultCSV = pd.read_csv("./DataCollection/lottoResultAllTime.csv")
 
@@ -44,16 +45,17 @@ def createLottoResultAllTime():
     with open(file_path, 'w') as json_file:
             json.dump(frequencyData, json_file, sort_keys=True, indent=4)
 
-def LottoResultAllTimeDownload():
+#그동안의 로또 기록을 각 숫자별로 나온 횟수를 정리하여 다운로드가 가능한 JSON 파일로 만들어 저장한다
+def download_lotto_results_json():
     resultCSV = pd.read_csv("./DataCollection/lottoResultAllTime.csv")
 
-    No1 = resultCSV["Num1"]
-    No2 = resultCSV["Num2"]
-    No3 = resultCSV["Num3"]
-    No4 = resultCSV["Num4"]
-    No5 = resultCSV["Num5"]
-    No6 = resultCSV["Num6"]
-    bonusNo = resultCSV["bnsNum"]
+    No1 = resultCSV["Num1"].to_dict()
+    No2 = resultCSV["Num2"].to_dict()
+    No3 = resultCSV["Num3"].to_dict()
+    No4 = resultCSV["Num4"].to_dict()
+    No5 = resultCSV["Num5"].to_dict()
+    No6 = resultCSV["Num6"].to_dict()
+    bonusNo = resultCSV["bnsNum"].to_dict()
     #print(No1, "\n", dict(No1))
     frequencyData = {
         "freqeuncy" : {
@@ -65,7 +67,7 @@ def LottoResultAllTimeDownload():
             "Num6": No6, 
             "bnsNum": bonusNo}, 
         "datasetNum" : len(resultCSV)
-    }
+        }
 
     script_dir = os.path.dirname(__file__)
     #print(frequencyData, script_dir)
@@ -73,15 +75,15 @@ def LottoResultAllTimeDownload():
     with open(file_path, 'w') as json_file:
             json.dump(frequencyData, json_file, sort_keys=True, indent=4)
 
-    print("done")
-
-def loadLottoResultAllTime():
+#프론트에서 사용 할 수 있는 형태로 각 추첨별 많이 나온 로또 번호들을 돌려준다
+def load_lotto_results_Frontend():
     script_dir = os.path.dirname(__file__)
     file_path = os.path.join(script_dir, "../DataCollection/frequencyData.json")
     jsonfile = open(file_path, 'r')
     data = json.load(jsonfile)
     print(json.dumps(data))
 
+#데이터를 시각화해 보기 편하게 파이차트 형식으로 이미지를 생성하고 돌려준다
 def createPieChart(input):
     resultCSV = pd.read_csv("./DataCollection/lottoResultAllTime.csv")
     resultCSV = pd.DataFrame(resultCSV)
@@ -179,10 +181,13 @@ def lottopredict(amount, randomDigitOption, digitcounts):
                     tempNumContainer.append(data["freqeuncy"]["Num6"][digit][0])
                 elif nums == 6:
                     tempNumContainer.append(data["freqeuncy"]["bnsNum"][digit][0])
+                
             NumContainer.append(tempNumContainer)
+            print(NumContainer)
             tempNumContainer = []
         
         j = 0
+        lottoPlaceCount = 0
         #최소 최고 반복 숫자 조건 7, 6부터는 오류가 뜸
         for i in range(int(amount)):
             while lottoPlaceCount < sampleSize:
@@ -191,6 +196,8 @@ def lottopredict(amount, randomDigitOption, digitcounts):
                 if r not in lottoNumPredict:
                     lottoPlaceCount += 1
                     lottoNumPredict.append(r)
+                print(lottoNumPredict)
+                #time.sleep(0.5)
 
             j += 1
 
@@ -209,12 +216,12 @@ def lottopredict(amount, randomDigitOption, digitcounts):
 
 
 if __name__ == '__main__':
-    if sys.argv[1] == "loadLottoResultAllTime":
-        loadLottoResultAllTime()
+    if sys.argv[1] == "load_lotto_results_Frontend":
+        load_lotto_results_Frontend()
     elif sys.argv[1] == "createLottoResultAllTime":
         createLottoResultAllTime()
-    elif sys.argv[1] == "LottoResultAllTimeDownload":
-        LottoResultAllTimeDownload()
+    elif sys.argv[1] == "download_lotto_results_json":
+        download_lotto_results_json()
     elif sys.argv[1] == "checkifrepeated":
         checkifrepeated()
     elif sys.argv[1] == "createPieChart":
