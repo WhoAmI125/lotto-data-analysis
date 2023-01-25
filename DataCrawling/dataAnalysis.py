@@ -16,7 +16,7 @@ bonusNo = []
 count = 0
 
 #
-def createLottoResultAllTime():
+def lotto_data_most_common():
     resultCSV = pd.read_csv("./DataCollection/lottoResultAllTime.csv")
 
     No1 = Counter(resultCSV["Num1"])
@@ -26,7 +26,6 @@ def createLottoResultAllTime():
     No5 = Counter(resultCSV["Num5"])
     No6 = Counter(resultCSV["Num6"])
     bonusNo = Counter(resultCSV["bnsNum"])
-    #print(No1, "\n", dict(No1))
     frequencyData = {
         "freqeuncy" : {
             "Num1": No1.most_common(), 
@@ -36,7 +35,15 @@ def createLottoResultAllTime():
             "Num5": No5.most_common(), 
             "Num6": No6.most_common(), 
             "bnsNum": bonusNo.most_common()}, 
-        "datasetNum" : len(resultCSV)
+        "datasetNum" : len(resultCSV),
+        "lengthofeachnum" : {
+            "Num1": len(No1.most_common()), 
+            "Num2": len(No2.most_common()), 
+            "Num3": len(No3.most_common()), 
+            "Num4": len(No4.most_common()), 
+            "Num5": len(No5.most_common()), 
+            "Num6": len(No6.most_common()), 
+            "bnsNum": len(bonusNo.most_common())},
         }
 
     script_dir = os.path.dirname(__file__)
@@ -151,7 +158,7 @@ def lottopredict(amount, randomDigitOption, digitcounts):
         for i in range(int(amount)):
 
             while lottoPlaceCount < sampleSize:
-                r = random.randint(0,45)
+                r = random.randint(1,45)
                 if r not in lottoNumPredict:
                     lottoPlaceCount += 1
                     lottoNumPredict.append(r)
@@ -212,19 +219,43 @@ def lottopredict(amount, randomDigitOption, digitcounts):
     }
     print(returnLotto)
 
+    return returnLotto
 
+#추측 완료한 로또 번호가 실제로 뽑힌적이 있는 로또 번호인지 확인하는 함수
+def check_if_equal_lotto_exist(value):
+    resultCSV = pd.read_csv("./DataCollection/lottoResultAllTime.csv")
+    resultCSV = resultCSV[resultCSV.columns[1:7]] #첫번째 column (회차) + 보너스 제외하고 일치하는 번호가 있는지 검색
+    print(value)
+    prediction = np.array(value) 
+    check_if_equal = (resultCSV == prediction).all(1) #로또 번호가 존재하는지 확인하고 [0, False], [1, True] 식으로 저장
+    #결과값을 리스트로 저장
+    saveInList = check_if_equal.astype(int).index[check_if_equal == 1].tolist() #bool값을 0,1 로 바꾸고 1이 존재한다면 그 값의 인덱스를 리턴
+    if len(saveInList) != 0:
+        print(saveInList[0]+1)
 
 
 if __name__ == '__main__':
     if sys.argv[1] == "load_lotto_results_Frontend":
         load_lotto_results_Frontend()
-    elif sys.argv[1] == "createLottoResultAllTime":
-        createLottoResultAllTime()
+    elif sys.argv[1] == "lotto_data_most_common":
+        lotto_data_most_common()
     elif sys.argv[1] == "download_lotto_results_json":
         download_lotto_results_json()
-    elif sys.argv[1] == "checkifrepeated":
-        checkifrepeated()
+    elif sys.argv[1] == "check_if_equal_lotto_exist":
+        check_if_equal_lotto_exist()
     elif sys.argv[1] == "createPieChart":
         createPieChart(sys.argv[2])
     elif sys.argv[1] == "lottopredict":
-        lottopredict(sys.argv[2], sys.argv[3], sys.argv[4])
+        result = lottopredict(sys.argv[2], sys.argv[3], sys.argv[4])
+
+    #test = 0
+    #count = 0
+
+    #while test != 1:
+        #result = lottopredict(sys.argv[2], sys.argv[3], sys.argv[4])
+        #for i in range(len(result['lottoPredict'])):
+            #test = check_if_equal_lotto_exist(result['lottoPredict'][i][:6], count)
+            #if test == 1:
+                #break
+            #count += 1
+    
