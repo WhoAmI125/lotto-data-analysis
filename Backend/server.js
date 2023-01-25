@@ -6,6 +6,7 @@ const app = express(); //express 객체 생성
 const server = http.createServer(app); //express http 서버 생성
 var path = require('path'); //기본 path 위치 가지고오기
 const {spawn} = require('child_process'); //python 파일 실행시키기
+const schedule = require('node-schedule') //cron 기능 활호화
 
 //웹사이트 기능
 /*
@@ -14,8 +15,21 @@ const {spawn} = require('child_process'); //python 파일 실행시키기
 - 백테스팅 기능
 */
 
+//토요일 오후 10시 1분 (22:01)에 로또 데이터 업데이트 코드 돌리기
+schedule.scheduleJob("1 22 * * 6", () => {
+    const python = spawn('python3', ['./DataCrawling/dataExtraction.py']);
+    python.stdout.on('data', async function(data) {
+        dataToSend = await data.toString();
+        console.log(dataToSend)
+    }); 
+})
+
+
+
 // Parse URL-encoded bodies (as sent by HTML forms)
-app.use(express.urlencoded());
+app.use(express.urlencoded({
+    extended: true
+}));
 // Parse JSON bodies (as sent by API clients)
 app.use(express.json());
 //css랑 js 불러오기

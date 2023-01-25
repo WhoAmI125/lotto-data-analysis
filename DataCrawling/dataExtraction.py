@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import numpy as np
 from collections import Counter
+import sys, os
 
 #bs4를 사용하여 가장 최근 로또 회차를 불러온다
 r = requests.get('https://dhlottery.co.kr/gameResult.do?method=byWin') #동행복권 사이트에 접속한다
